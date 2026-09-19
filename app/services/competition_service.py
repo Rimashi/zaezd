@@ -57,7 +57,30 @@ def update_competition(db, competition_id: int, data):
     if new_status is not None:
         validate_status_change(db, competition, new_status)
 
-    changing_regular_fields = any(key != "status" for key in values)
+    # Форма на фронтенде отправляет все поля соревнования даже тогда,
+    # когда пользователь меняет только статус. Поэтому проверяем не сам факт
+    # наличия поля в PATCH-запросе, а действительно ли его значение изменилось.
+    regular_fields = {
+        "name",
+        "competition_date",
+        "hippodrome_name",
+        "race_type",
+        "surface_type",
+        "prize_fund",
+    }
+    changing_regular_fields = False
+
+    for key in regular_fields:
+        if key not in values:
+            continue
+
+        old_value = getattr(competition, key)
+        new_value = values[key]
+
+        if old_value != new_value:
+            changing_regular_fields = True
+            break
+
     if changing_regular_fields and competition.status != CompetitionStatus.PLANNED:
         raise AppError("Основные данные соревнования можно менять только пока оно запланировано", 409)
 
