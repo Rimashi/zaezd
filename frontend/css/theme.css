@@ -1,0 +1,60 @@
+/* ============================================================================
+   Токены оформления.
+   Спокойная плоская тема без градиентов и чрезмерных скруглений.
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  /* Фоны */
+  --bg: #f7f3ee;
+  --surface: #ffffff;
+  --surface-2: #fbf8f5;
+  --border: #e7ddd4;
+  --border-strong: #d5c4b5;
+
+  /* Текст */
+  --text: #2b1f17;
+  --text-muted: #846f61;
+
+  /* Акцент */
+  --brand: #c2570f;
+  --brand-dark: #963f0b;
+  --brand-soft: #fbece0;
+
+  /* Сайдбар */
+  --brown: #443127;
+  --brown-dark: #34251e;
+  --brown-soft: #6b4c3a;
+
+  /* Статусы */
+  --ok: #1f7a4d;
+  --ok-soft: #e6f5ed;
+  --warn: #9c621c;
+  --warn-soft: #fbefdd;
+  --danger: #b3261e;
+  --danger-soft: #fdeceb;
+  --info: #2f5d8a;
+  --info-soft: #e9f1f9;
+
+  /* Геометрия */
+  --radius-sm: 7px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Тени */
+  --shadow-sm: 0 1px 2px rgba(43, 31, 23, 0.05);
+  --shadow: 0 8px 22px rgba(43, 31, 23, 0.07);
+  --shadow-lg: 0 22px 54px rgba(43, 31, 23, 0.16);
+
+  /* Шрифты */
+  --font:
+    "Segoe UI", Inter, system-ui, -apple-system, "Helvetica Neue", Arial,
+    sans-serif;
+  --font-mono: "Cascadia Mono", "JetBrains Mono", Consolas, monospace;
+
+  /* Размеры каркаса */
+  --sidebar-w: 248px;
+  --sidebar-collapsed-w: 72px;
+  --topbar-h: 72px;
+}

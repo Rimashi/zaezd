@@ -1,0 +1,145 @@
+Enum user_role {
+  admin
+  organizer
+}
+
+Enum horse_sex {
+  stallion
+  mare
+  gelding
+}
+
+Enum horse_status {
+  active
+  injured
+  retired
+  deceased
+}
+
+Enum jockey_status {
+  active
+  injured
+  suspended
+  retired
+}
+
+Enum competition_status {
+  planned
+  in_progress
+  finished
+  cancelled
+}
+
+Enum race_status {
+  planned
+  in_progress
+  finished
+  cancelled
+}
+
+Enum race_entry_status {
+  registered
+  withdrawn
+}
+
+Enum result_status {
+  finished
+  did_not_finish
+  did_not_start
+  disqualified
+}
+
+Table users {
+  id bigint [pk, increment]
+  email varchar(100) [not null]
+  login varchar(100) [not null, unique]
+  password_hash varchar(255) [not null]
+  role user_role [not null]
+}
+
+Table horses {
+  id bigint [pk, increment]
+  name varchar(150) [not null]
+  breed varchar(150) [not null]
+  owner varchar(150) [not null]
+  birth_date date [not null]
+  sex horse_sex [not null]
+  weight_kg decimal(6,2)
+  status horse_status [not null, default: 'active']
+}
+
+Table jockeys {
+  id bigint [pk, increment]
+  last_name varchar(100) [not null]
+  first_name varchar(100) [not null]
+  patronymic varchar(100)
+  birth_date date [not null]
+  qualification varchar(150)
+  weight_kg decimal(6,2)
+  status jockey_status [not null, default: 'active']
+}
+
+Table teams {
+  id bigint [pk, increment]
+  horse_id bigint [not null]
+  jockey_id bigint [not null]
+
+  indexes {
+    (horse_id, jockey_id) [unique]
+  }
+}
+
+Table competitions {
+  id bigint [pk, increment]
+  name varchar(200) [not null]
+  organizer_id bigint [not null]
+  competition_date date [not null]
+  hippodrome_name varchar(200) [not null]
+  race_type varchar(100)
+  surface_type varchar(100)
+  prize_fund decimal(14,2)
+  status competition_status [not null, default: 'planned']
+}
+
+Table races {
+  id bigint [pk, increment]
+  competition_id bigint [not null]
+  race_number int [not null]
+  start_time time
+  distance_m int [not null]
+  status race_status [not null, default: 'planned']
+
+  indexes {
+    (competition_id, race_number) [unique]
+  }
+}
+
+Table race_entries {
+  id bigint [pk, increment]
+  race_id bigint [not null]
+  team_id bigint [not null]
+  start_number int [not null]
+  status race_entry_status [not null, default: 'registered']
+  withdrawal_reason varchar(500)
+
+  indexes {
+    (race_id, team_id) [unique]
+    (race_id, start_number) [unique]
+  }
+}
+
+Table results {
+  id bigint [pk, increment]
+  race_entry_id bigint [not null, unique]
+  position int
+  finish_time_ms bigint
+  status result_status [not null]
+}
+
+Ref: teams.horse_id > horses.id
+Ref: teams.jockey_id > jockeys.id
+Ref: competitions.organizer_id > users.id
+Ref: races.competition_id > competitions.id
+Ref: race_entries.race_id > races.id
+Ref: race_entries.team_id > teams.id
+Ref: results.race_entry_id - race_entries.id

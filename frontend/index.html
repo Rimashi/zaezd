@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ипподром — учёт скачек</title>
+    <link rel="icon" href="data:," />
+
+    <!-- Порядок подключения стилей важен: сначала токены, потом базовые правила,
+       потом каркас (сетка страницы), потом компоненты и стили разделов. -->
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/views.css" />
+  </head>
+  <body>
+    <!-- Всё приложение собирается скриптами в этот контейнер -->
+    <div id="app"></div>
+
+    <!-- Служебные слои поверх страницы: модальные окна и всплывающие уведомления -->
+    <div id="modal-root" class="modal-root" hidden></div>
+    <div id="toast-root" class="toast-root"></div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

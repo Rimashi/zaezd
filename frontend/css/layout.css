@@ -1,0 +1,687 @@
+/* ============================================================================
+   Каркас страницы: закрепляемый/автоскрываемый сайдбар, мобильное off-canvas
+   меню, верхняя панель и резиновая область контента.
+   ========================================================================== */
+
+.app {
+  min-height: 100vh;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  min-height: 100vh;
+  transition: grid-template-columns 0.18s ease;
+}
+.shell.sidebar-autohide {
+  grid-template-columns: var(--sidebar-collapsed-w) minmax(0, 1fr);
+}
+
+/* ---------------------------------------------------------------- сайдбар */
+.sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: var(--sidebar-w);
+  height: 100vh;
+  padding: 18px 14px;
+  overflow: hidden;
+  color: #f4e9df;
+  background: var(--brown);
+  transition:
+    width 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.2s ease;
+}
+
+.sidebar-autohide .sidebar {
+  width: var(--sidebar-collapsed-w);
+}
+.sidebar-autohide .sidebar:hover,
+.sidebar-autohide .sidebar:focus-within {
+  width: var(--sidebar-w);
+  box-shadow: 12px 0 28px rgba(43, 31, 23, 0.16);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 44px;
+  padding: 2px 4px;
+}
+.brand-mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  color: #fff;
+  background: var(--brand);
+}
+.brand-mark svg {
+  width: 24px;
+  height: 24px;
+}
+.brand-copy {
+  min-width: 0;
+  white-space: nowrap;
+  transition: opacity 0.12s ease;
+}
+.brand-title {
+  font-size: 15px;
+  font-weight: 650;
+}
+.brand-sub {
+  font-size: 12px;
+  color: rgba(244, 233, 223, 0.62);
+}
+
+/* Кнопка закрепления вынесена в отдельную строку: больше не пересекается с логотипом. */
+.sidebar-controls {
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.sidebar-pin {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  width: 100%;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  color: rgba(244, 233, 223, 0.72);
+  background: rgba(255, 255, 255, 0.035);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+.sidebar-pin:hover,
+.sidebar-pin:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.09);
+}
+.sidebar-pin svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+.sidebar-pin.is-pinned {
+  color: #fff;
+}
+.sidebar-pin.is-pinned svg {
+  transform: rotate(-35deg);
+}
+.sidebar-pin-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-sidebar-close,
+.mobile-menu-toggle,
+.mobile-nav-backdrop {
+  display: none;
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+.nav-group-label {
+  padding: 12px 10px 6px;
+  overflow: hidden;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(244, 233, 223, 0.45);
+  transition: opacity 0.12s ease;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.07);
+  text-decoration: none;
+}
+.nav-link svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  opacity: 0.78;
+}
+.nav-link.is-active {
+  color: #fff;
+  background: var(--brand);
+}
+.nav-link.is-active svg {
+  opacity: 1;
+}
+.nav-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.12s ease;
+}
+.nav-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: rgba(244, 233, 223, 0.55);
+  transition: opacity 0.12s ease;
+}
+.nav-link.is-active .nav-count {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sidebar-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.ghost-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 7px 10px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: rgba(244, 233, 223, 0.68);
+  font-size: 13px;
+  white-space: nowrap;
+  text-align: left;
+  cursor: pointer;
+}
+.ghost-link:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+.ghost-link svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+/* В обычном автоскрытии оставляем только иконки. */
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .brand-copy,
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .nav-text,
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .nav-count,
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .nav-group-label,
+.sidebar-autohide
+  .sidebar:not(:hover):not(:focus-within)
+  .ghost-link
+  .nav-text {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .brand {
+  justify-content: center;
+  gap: 0;
+}
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .sidebar-controls {
+  display: none;
+}
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .nav-link,
+.sidebar-autohide .sidebar:not(:hover):not(:focus-within) .ghost-link {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 8px;
+}
+
+/* После выбора пункта или нажатия «Открепить» состояние :hover/:focus-within
+   намеренно игнорируется до ухода указателя из меню. */
+.sidebar-autohide.sidebar-force-collapsed .sidebar {
+  width: var(--sidebar-collapsed-w);
+  box-shadow: none;
+}
+.sidebar-autohide.sidebar-force-collapsed .sidebar .brand-copy,
+.sidebar-autohide.sidebar-force-collapsed .sidebar .nav-text,
+.sidebar-autohide.sidebar-force-collapsed .sidebar .nav-count,
+.sidebar-autohide.sidebar-force-collapsed .sidebar .nav-group-label,
+.sidebar-autohide.sidebar-force-collapsed .sidebar .ghost-link .nav-text {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.sidebar-autohide.sidebar-force-collapsed .sidebar .brand {
+  justify-content: center;
+  gap: 0;
+}
+.sidebar-autohide.sidebar-force-collapsed .sidebar .sidebar-controls {
+  display: none;
+}
+.sidebar-autohide.sidebar-force-collapsed .sidebar .nav-link,
+.sidebar-autohide.sidebar-force-collapsed .sidebar .ghost-link {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 8px;
+}
+
+/* ----------------------------------------------------- верхняя панель */
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: var(--topbar-h);
+  padding: 12px clamp(16px, 2.2vw, 32px);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+}
+.page-title {
+  min-width: 0;
+}
+.page-title h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.page-title h1 svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--brand);
+}
+.page-title h1 span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.page-subtitle {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* --------------------------------------------------------- содержимое */
+.view {
+  width: 100%;
+  min-width: 0;
+  padding: clamp(16px, 2vw, 28px) clamp(16px, 2.2vw, 32px) 48px;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
+}
+.section-head .spacer {
+  margin-left: auto;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.grid-dash {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.grid-2 > *,
+.grid-3 > *,
+.grid-dash > * {
+  min-width: 0;
+}
+
+/* -------------------------------------------------------- кнопка наверх */
+.scroll-top-btn {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 35;
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--brown);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  cursor: pointer;
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease,
+    background 0.16s ease;
+}
+.scroll-top-btn svg {
+  width: 19px;
+  height: 19px;
+}
+.scroll-top-btn:hover {
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+}
+.scroll-top-btn.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------- адаптив */
+@media (max-width: 1200px) {
+  .grid-dash {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 1080px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* На планшете/телефоне sidebar становится off-canvas burger-меню. */
+@media (max-width: 900px) {
+  body.mobile-nav-open {
+    overflow: hidden;
+  }
+
+  .shell,
+  .shell.sidebar-autohide {
+    display: block;
+    min-height: 100vh;
+  }
+
+  .sidebar,
+  .sidebar-autohide .sidebar,
+  .sidebar-autohide .sidebar:hover,
+  .sidebar-autohide .sidebar:focus-within,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 70;
+    width: min(84vw, 320px);
+    height: 100dvh;
+    padding: 16px 14px;
+    gap: 14px;
+    overflow: hidden;
+    box-shadow: 16px 0 38px rgba(43, 31, 23, 0.22);
+    transform: translateX(-104%);
+  }
+  .shell.mobile-menu-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .brand {
+    justify-content: flex-start !important;
+    gap: 11px !important;
+    min-height: 46px;
+    padding: 0;
+  }
+  .brand-copy,
+  .sidebar-autohide .sidebar .brand-copy,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar .brand-copy {
+    width: auto;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+  }
+  .brand-sub {
+    display: block;
+  }
+
+  .mobile-sidebar-close {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin-left: auto;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+  }
+  .mobile-sidebar-close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .sidebar-controls {
+    display: none !important;
+  }
+
+  .nav {
+    flex-direction: column;
+    gap: 3px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0;
+  }
+  .nav-group-label,
+  .sidebar-autohide .sidebar .nav-group-label,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar .nav-group-label {
+    display: block;
+    width: auto;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nav-count,
+  .sidebar-autohide .sidebar .nav-count,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar .nav-count {
+    display: inline;
+    width: auto;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nav-text,
+  .sidebar-autohide .sidebar .nav-text,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar .nav-text,
+  .sidebar-autohide .sidebar .ghost-link .nav-text,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar .ghost-link .nav-text {
+    width: auto;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nav-link,
+  .sidebar-autohide .sidebar .nav-link,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar .nav-link,
+  .ghost-link,
+  .sidebar-autohide .sidebar .ghost-link,
+  .sidebar-autohide.sidebar-force-collapsed .sidebar .ghost-link {
+    justify-content: flex-start;
+    gap: 10px;
+    min-height: 42px;
+    padding: 10px 11px;
+  }
+
+  .sidebar-foot {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .mobile-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: rgba(32, 23, 18, 0.42);
+    opacity: 0;
+    pointer-events: none;
+    cursor: default;
+    transition: opacity 0.2s ease;
+  }
+  .shell.mobile-menu-open .mobile-nav-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-menu-toggle {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    cursor: pointer;
+  }
+  .mobile-menu-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    min-height: 64px;
+    padding: 10px 14px;
+  }
+  .page-title h1 {
+    font-size: 20px;
+  }
+  .page-title h1 svg {
+    width: 19px;
+    height: 19px;
+  }
+  .page-subtitle {
+    font-size: 12px;
+  }
+
+  .view {
+    padding: 16px 14px 76px;
+  }
+
+  .scroll-top-btn {
+    display: grid;
+    right: 14px;
+    bottom: 14px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .topbar .user-box {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .topbar .user-info {
+    flex: 1;
+    text-align: left;
+  }
+  .role-switch {
+    min-width: 0;
+    max-width: 190px;
+  }
+}
+
+@media (max-width: 500px) {
+  .brand-sub {
+    font-size: 11px;
+  }
+  .topbar .user-info {
+    display: none;
+  }
+  .topbar .user-box {
+    justify-content: space-between;
+  }
+  .topbar .user-box .badge {
+    font-size: 11px;
+  }
+  .role-switch {
+    flex: 1;
+    max-width: none;
+  }
+  .page-subtitle {
+    display: none;
+  }
+  .view {
+    padding-inline: 10px;
+  }
+  .scroll-top-btn {
+    right: 10px;
+    bottom: 10px;
+  }
+}
