@@ -1,7 +1,8 @@
 /*
-  Для первой версии роли специально сделаны простыми.
-  Администратор может делать всё.
-  Организатор может работать со спортивной частью, но не управляет users.
+  Права первой версии.
+
+  admin / organizer — могут изменять спортивные данные.
+  public — зритель без учётной записи: только просмотр.
 */
 
 export const PERMISSIONS = {
@@ -24,6 +25,16 @@ export const PERMISSIONS = {
     races: "crud",
     race_entries: "crud",
     results: "crud",
+  },
+  public: {
+    users: "none",
+    horses: "read",
+    jockeys: "read",
+    teams: "read",
+    competitions: "read",
+    races: "read",
+    race_entries: "read",
+    results: "read",
   },
 };
 

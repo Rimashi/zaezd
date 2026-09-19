@@ -165,8 +165,19 @@
   flex-direction: column;
   gap: 14px;
 }
-.login-submit {
+.login-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.login-submit,
+.login-guest {
   justify-content: center;
+}
+@media (max-width: 560px) {
+  .login-actions {
+    grid-template-columns: 1fr;
+  }
 }
 .login-error {
   padding: 10px 12px;

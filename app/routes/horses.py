@@ -8,18 +8,18 @@ from app.schemas.horse import HorseCreate, HorseUpdate
 router = APIRouter()
 
 
+# Просмотр доступен всем, в том числе зрителям без входа.
 @router.get("")
-def list_horses(request: Request):
-    require_user(request)
+def list_horses():
     return horse_controller.list_horses()
 
 
 @router.get("/{horse_id}")
-def get_horse(horse_id: int, request: Request):
-    require_user(request)
+def get_horse(horse_id: int):
     return horse_controller.get_horse(horse_id)
 
 
+# Изменять данные может только вошедший пользователь.
 @router.post("")
 def create_horse(data: HorseCreate, request: Request):
     require_user(request)

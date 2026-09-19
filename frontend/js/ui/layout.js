@@ -9,7 +9,7 @@ import { api } from "../core/api.js";
 import { routes } from "../views/index.js";
 import { canViewSection } from "../core/session.js";
 import { canUse } from "../data/permissions.js";
-import { currentUser, logout } from "../core/session.js";
+import { currentUser, isGuest, logout } from "../core/session.js";
 import { toneFor } from "../data/schema.js";
 import { roleLabel } from "./roles.js";
 
@@ -18,6 +18,7 @@ const MOBILE_MEDIA = "(max-width: 900px)";
 
 export function renderShell(root) {
   const user = currentUser();
+  const guest = isGuest();
   let sidebarPinned = readSidebarPinned();
   let mobileMenuOpen = false;
 
@@ -117,12 +118,15 @@ export function renderShell(root) {
           {
             class: "ghost-link",
             type: "button",
-            title: "Выйти из системы",
+            title: guest ? "Вернуться к экрану входа" : "Выйти из системы",
             onclick: handleLogout,
           },
           [
             icon("logout"),
-            el("span", { class: "nav-text", text: "Выйти из системы" }),
+            el("span", {
+              class: "nav-text",
+              text: guest ? "Вернуться ко входу" : "Выйти из системы",
+            }),
           ],
         ),
       ]),
@@ -147,13 +151,18 @@ export function renderShell(root) {
     [icon("menu")],
   );
 
+  let userName = user?.email ?? user?.login ?? "—";
+  let userSubline = `логин: ${user?.login ?? "—"}`;
+
+  if (guest) {
+    userName = "Гостевой просмотр";
+    userSubline = "без учётной записи";
+  }
+
   const userBox = el("div", { class: "user-box" }, [
     el("div", { class: "user-info" }, [
-      el("div", {
-        class: "user-name",
-        text: user?.email ?? user?.login ?? "—",
-      }),
-      el("div", { class: "user-login", text: `логин: ${user?.login ?? "—"}` }),
+      el("div", { class: "user-name", text: userName }),
+      el("div", { class: "user-login", text: userSubline }),
     ]),
     el("span", {
       class: `badge ${toneFor(user?.role)}`,

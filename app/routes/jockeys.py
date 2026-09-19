@@ -9,14 +9,12 @@ router = APIRouter()
 
 
 @router.get("")
-def list_jockeys(request: Request):
-    require_user(request)
+def list_jockeys():
     return jockey_controller.list_jockeys()
 
 
 @router.get("/{jockey_id}")
-def get_jockey(jockey_id: int, request: Request):
-    require_user(request)
+def get_jockey(jockey_id: int):
     return jockey_controller.get_jockey(jockey_id)
 
 

@@ -9,6 +9,7 @@
    ========================================================================== */
 
 import { el, clear } from "./dom.js";
+import { canViewSection } from "./session.js";
 
 let routes = [];
 let mount = null;
@@ -79,6 +80,15 @@ async function renderCurrentRoute() {
   }
 
   const { route, params } = match;
+
+  // Например, зритель не должен открыть /users даже вручную через hash.
+  if (route.entity && !canViewSection(route.entity)) {
+    if (path !== "/dashboard") {
+      window.location.hash = "/dashboard";
+      return;
+    }
+  }
+
   clear(mount.root);
   markActiveLink(route.activeKey ?? route.key);
   mount.setTitle(route.title, route.subtitle, route.icon);
