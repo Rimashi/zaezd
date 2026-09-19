@@ -9,6 +9,7 @@
 
 import { api } from "../core/api.js";
 import { describe, entities } from "../data/schema.js";
+import { canViewSection } from "../core/session.js";
 
 const ALL_ENTITIES = Object.keys(entities);
 
@@ -21,6 +22,11 @@ export async function loadLookup(entityKeys = ALL_ENTITIES) {
   const data = new Map();
 
   for (const key of entityKeys) {
+    if (!canViewSection(key)) {
+      data.set(key, []);
+      continue;
+    }
+
     try {
       data.set(key, await api.list(key));
     } catch {

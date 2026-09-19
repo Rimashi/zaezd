@@ -1,6 +1,6 @@
 import { el } from "../core/dom.js";
 import { icon } from "./icons.js";
-import { login } from "../core/session.js";
+import { enterGuestMode, login } from "../core/session.js";
 
 export function renderLogin(root, { onSuccess }) {
   const errorNode = el("div", { class: "login-error", hidden: true });
@@ -25,6 +25,19 @@ export function renderLogin(root, { onSuccess }) {
     [icon("lock"), el("span", { text: "Войти" })],
   );
 
+  const guestButton = el(
+    "button",
+    {
+      class: "btn login-guest",
+      type: "button",
+      onclick: () => {
+        enterGuestMode();
+        onSuccess();
+      },
+    },
+    [icon("eye"), el("span", { text: "Продолжить без входа" })],
+  );
+
   const form = el("form", { class: "login-form", onsubmit: handleSubmit }, [
     el("div", { class: "field" }, [
       el("label", { for: "login-input", text: "Логин" }),
@@ -35,13 +48,14 @@ export function renderLogin(root, { onSuccess }) {
       passwordInput,
     ]),
     errorNode,
-    submitButton,
+    el("div", { class: "login-actions" }, [submitButton, guestButton]),
   ]);
 
   async function handleSubmit(event) {
     event.preventDefault();
     errorNode.hidden = true;
     submitButton.disabled = true;
+    guestButton.disabled = true;
 
     try {
       await login(loginInput.value, passwordInput.value);
@@ -53,6 +67,7 @@ export function renderLogin(root, { onSuccess }) {
       errorNode.hidden = false;
     } finally {
       submitButton.disabled = false;
+      guestButton.disabled = false;
     }
   }
 
@@ -73,7 +88,7 @@ export function renderLogin(root, { onSuccess }) {
         el("div", { class: "login-hint" }, [
           el("div", {
             class: "small muted",
-            text: "Учётная запись администратора создаётся автоматически при первом запуске. Логин и пароль задаются в .env.",
+            text: "Зритель может войти без учётной записи и просматривать соревнования, участников и результаты. Для изменения данных требуется вход.",
           }),
         ]),
       ]),
