@@ -63,7 +63,23 @@ def update_race(db, race_id: int, data):
     if new_status is not None:
         validate_status_change(competition, race, new_status)
 
-    changing_regular_fields = any(key not in {"status", "competition_id"} for key in values)
+    # Форма на фронтенде отправляет все поля заезда даже тогда, когда
+    # пользователь меняет только статус. Поэтому проверяем не сам факт
+    # наличия поля в PATCH-запросе, а действительно ли его значение изменилось.
+    regular_fields = {"race_number", "start_time", "distance_m"}
+    changing_regular_fields = False
+
+    for key in regular_fields:
+        if key not in values:
+            continue
+
+        old_value = getattr(race, key)
+        new_value = values[key]
+
+        if old_value != new_value:
+            changing_regular_fields = True
+            break
+
     if changing_regular_fields and race.status != RaceStatus.PLANNED:
         raise AppError("Параметры заезда можно менять только до его начала", 409)
 
