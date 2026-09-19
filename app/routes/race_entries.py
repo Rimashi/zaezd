@@ -9,14 +9,12 @@ router = APIRouter()
 
 
 @router.get("")
-def list_entries(request: Request, race_id: int | None = None):
-    require_user(request)
+def list_entries(race_id: int | None = None):
     return race_entry_controller.list_entries(race_id)
 
 
 @router.get("/{entry_id}")
-def get_entry(entry_id: int, request: Request):
-    require_user(request)
+def get_entry(entry_id: int):
     return race_entry_controller.get_entry(entry_id)
 
 

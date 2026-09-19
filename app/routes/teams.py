@@ -9,14 +9,12 @@ router = APIRouter()
 
 
 @router.get("")
-def list_teams(request: Request, horse_id: int | None = None, jockey_id: int | None = None):
-    require_user(request)
+def list_teams(horse_id: int | None = None, jockey_id: int | None = None):
     return team_controller.list_teams(horse_id, jockey_id)
 
 
 @router.get("/{team_id}")
-def get_team(team_id: int, request: Request):
-    require_user(request)
+def get_team(team_id: int):
     return team_controller.get_team(team_id)
 
 

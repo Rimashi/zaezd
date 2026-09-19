@@ -9,14 +9,12 @@ router = APIRouter()
 
 
 @router.get("")
-def list_competitions(request: Request):
-    require_user(request)
+def list_competitions():
     return competition_controller.list_competitions()
 
 
 @router.get("/{competition_id}")
-def get_competition(competition_id: int, request: Request):
-    require_user(request)
+def get_competition(competition_id: int):
     return competition_controller.get_competition(competition_id)
 
 

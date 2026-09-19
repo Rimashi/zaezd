@@ -9,14 +9,12 @@ router = APIRouter()
 
 
 @router.get("")
-def list_results(request: Request):
-    require_user(request)
+def list_results():
     return result_controller.list_results()
 
 
 @router.get("/{result_id}")
-def get_result(result_id: int, request: Request):
-    require_user(request)
+def get_result(result_id: int):
     return result_controller.get_result(result_id)
 
 
